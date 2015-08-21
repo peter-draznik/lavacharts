@@ -33,10 +33,12 @@ class Chart
     public $label         = null;
     public $datatable     = null;
     public $deferedRender = false;
+    
 
     protected $defaults  = null;
     protected $events    = array();
     protected $options   = array();
+    protected $elementId  = null;
 
     /**
      * Builds a new chart with a label.
@@ -151,7 +153,34 @@ class Chart
             );
         }
     }
-
+	
+	public function setElementId($elementId)
+	{
+		if (Utils::nonEmptyString($elementId) === false) {
+            throw new InvalidElementId($elementId);
+        }
+		
+		$this->elementId = $elementId;
+	}
+	
+	public function getElementId()
+	{
+		return $this->elementId;
+	}
+	public function getType(){
+		return str_replace('Google', '', $this->type);
+	}
+	public function getChartWrapperJson()
+	{
+		$wrapper = [
+			'chartType'	=> $this->getType(),
+			//'dataTable'	=> json_decode($this->getDataTableJson()) ,
+			'options'	=> $this->options,
+			'containerId'	=> $this->elementId
+			
+		];
+		return json_encode($wrapper);
+	}
     /**
      * Checks if any events have been assigned to the chart.
      *
@@ -234,7 +263,7 @@ class Chart
             );
         }
     }
-
+    
     /**
      * Assigns wich Datatable will be used for this Chart.
      *
@@ -298,7 +327,8 @@ class Chart
             'onmouseover',
             'onmouseout',
             'ready',
-            'select'
+            'select',
+            'sort'
         );
 
         if (is_array($e)) {
