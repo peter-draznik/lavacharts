@@ -231,7 +231,7 @@ class DataTable
     }
 
     /**
-     * Supplemental function to add a string column with less params.
+     * Supplemental function to add a boolean column with less params.
      *
      * @access public
      * @param  string                A label for the column.
@@ -240,7 +240,7 @@ class DataTable
      * @throws InvalidConfigProperty
      * @return DataTable
      */
-    public function addStringColumn($optLabel, Format $formatter = null)
+    public function addBooleanColumn($optLabel, Format $formatter = null)
     {
         return $this->addColumn('boolean', $optLabel, 'col_' . count($this->cols) + 1, $formatter);
     }
