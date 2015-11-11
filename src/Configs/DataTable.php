@@ -81,7 +81,7 @@ class DataTable
     private $colCellTypes = array(
         'string',
         'number',
-        //'bool',
+        'boolean',
         'date',
         //'datetime',
         'timeofday'
@@ -230,6 +230,21 @@ class DataTable
         return $this;
     }
 
+    /**
+     * Supplemental function to add a string column with less params.
+     *
+     * @access public
+     * @param  string                A label for the column.
+     * @param  Format                A column formatter object. (Optional)
+     * @throws InvalidConfigValue
+     * @throws InvalidConfigProperty
+     * @return DataTable
+     */
+    public function addStringColumn($optLabel, Format $formatter = null)
+    {
+        return $this->addColumn('boolean', $optLabel, 'col_' . count($this->cols) + 1, $formatter);
+    }
+    
     /**
      * Supplemental function to add a string column with less params.
      *
