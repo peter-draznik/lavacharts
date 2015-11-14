@@ -19,6 +19,9 @@ $charts = [
     'LineChart',
     'PieChart',
     'GoogleTable',
+
+
+
 ];
 
 $dashboards = [
