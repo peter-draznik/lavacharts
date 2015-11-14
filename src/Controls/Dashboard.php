@@ -18,6 +18,7 @@
  */
 
 use Khill\Lavacharts\Utils;
+use Khill\Lavacharts\Lavacharts;
 use Khill\Lavacharts\JavascriptFactory;
 use Khill\Lavacharts\Controls\Control;
 use Khill\Lavacharts\Configs\DataTable;
@@ -173,8 +174,8 @@ class Dashboard
 	    //$ordering=0 => [fliter=>table(s)]
 	    //$ordering=1 => [chart=>filter(s)]
 	    $firstLabel 	= explode('|', $firstLabel)[0];
-	    $isChart  		= Utils::nonEmptyStringInArray($firstLabel, Khill\Lavacharts\Lavacharts::$chartClasses);
-	    $isControl 		= Utils::nonEmptyStringInArray($firstLabel, Khill\Lavacharts\Lavacharts::$controlClasses);
+	    $isChart  		= Utils::nonEmptyStringInArray($firstLabel, Lavacharts::$chartClasses);
+	    $isControl 		= Utils::nonEmptyStringInArray($firstLabel, Lavacharts::$controlClasses);
 	    
 	    if ( $isControl ){
 		    return $isControlFirst == $isControl;
