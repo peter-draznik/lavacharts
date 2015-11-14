@@ -105,8 +105,7 @@ class Volcano
     {
         
         $this->controls[$control->type][$control->label] = $control;
-		//die( print_r($this->controls[$control->type][$control->label]) );
-        return true;
+		return true;
     }
 
     /**
