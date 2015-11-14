@@ -174,13 +174,13 @@ class Lavacharts
             $objectType = str_replace('renderDashboard', '', $objectType);
             $objectType = str_replace('renderControl', 	 '', $objectType);
 
-            if (in_array($objectType, $this->chartClasses)) {
+	            if (in_array($objectType, self::$chartClasses)) {
 	            return $this->renderChart($objectType, $arguments[0], $arguments[1]);
-            } elseif (in_array($objectType, $this->controlClasses)) {
+            } elseif (in_array($objectType, self::$controlClasses)) {
                 return $this->renderControl($objectType, $arguments[0], $arguments[1]);
             } elseif (in_array($objectType, $this->dashboardClasses)) {
                 return $this->renderDashboard($objectType, $arguments[0], $arguments[1]);
-            } elseif ( in_array(str_replace('Wrapper','', $objectType), $this->chartClasses) ){
+            } elseif ( in_array(str_replace('Wrapper','', $objectType), self::$chartClasses) ){
 	            return $this->renderChartWrapper(str_replace('Wrapper','', $objectType), $arguments[0], $arguments[1]);
             } else {
                 throw new InvalidLavaObject($objectType);
@@ -195,7 +195,7 @@ class Lavacharts
             }
         }
 
-        if (in_array($member, $this->chartClasses)) {
+        if (in_array($member, self::$chartClasses)) {
             if (isset($arguments[0])) {
                 if (Utils::nonEmptyString($arguments[0])) {
 	                return $this->chartFactory($member, $arguments[0]);
@@ -207,7 +207,7 @@ class Lavacharts
             }
         }
         
-        if (in_array( str_replace( 'Wrapper' , '', $member) , $this->chartClasses)) {
+        if (in_array( str_replace( 'Wrapper' , '', $member) , self::$chartClasses)) {
             if (isset($arguments[0])) {
                 if (Utils::nonEmptyString($arguments[0])) {
 	                return $this->chartWrapperFactory($member, $arguments[0]);
@@ -219,7 +219,7 @@ class Lavacharts
             }
         }
         
-        if (in_array($member, $this->controlClasses)) {
+        if (in_array($member, self::$controlClasses)) {
             if (isset($arguments[0])) {
                 if (Utils::nonEmptyString($arguments[0])) {
                     return $this->controlFactory($member, $arguments[0]);
