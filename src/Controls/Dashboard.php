@@ -129,15 +129,26 @@ class Dashboard
     
     public function bindings($bindings)
     {
-        if (is_array($bindings) && count($bindings) > 0) {
-            foreach ($bindings as $control => $charts) {
-                if (is_array($charts) && count($charts) > 0) {
+        if (Utils::arrayIsMulti($bindings)) {
+            foreach ($bindings as $control => $charts) { //or $chart=>controls
+                if (Utils::arrayIsMulti($charts)) {
 		            foreach ($charts as $chartKey => $chart) {
 		                $chartLabel = is_int($chartKey)?$chart:$chartKey;
-		                $this->makeBinding($control, $chartLabel);
+		                
+		                if( $this->checkBindingOrdering($control) ){
+			                $this->makeBinding($control, $chartLabel);
+		                }else{//Flipped ordering of [fliter=>chart(s)] to [chart=>filter(s)]
+			                $this->makeBinding($chartLabel, $control);
+		                }
+		                
 		            }
 		        } else if(is_string($charts) && strlen($charts) > 0 ){
-			        $this->makeBinding($control, $charts);
+			        if( $this->checkBindingOrdering($control) ){
+		                $this->makeBinding($control, $charts);
+	                }else{
+		                $this->makeBinding($chartLabel, $control);
+	                }
+			        
 		        } else {
 		            throw $this->invalidConfigValue(
 		                __FUNCTION__,
@@ -153,6 +164,32 @@ class Dashboard
         }
     }
     
+    /**
+     * Gets the current chart bindings.
+     *
+     * @return array
+     */
+    private function checkBindingOrdering($firstLabel, $isControlFirst=true){
+	    //$ordering=0 => [fliter=>table(s)]
+	    //$ordering=1 => [chart=>filter(s)]
+	    $firstLabel 	= explode('|', $firstLabel)[0];
+	    $isChart  		= Utils::nonEmptyStringInArray($firstLabel, Khill\Lavacharts\Lavacharts::$chartClasses);
+	    $isControl 		= Utils::nonEmptyStringInArray($firstLabel, Khill\Lavacharts\Lavacharts::$controlClasses);
+	    
+	    if ( $isControl ){
+		    return $isControlFirst == $isControl;
+	    }else if($isChart){
+		    return !$isControlFirst == $isControl;
+	    }
+	    
+	    return false;
+    }
+    
+    /**
+     * Gets the current chart bindings.
+     *
+     * @return array
+     */
     public function getBindings(){
 	    return $this->bindings;
     }
