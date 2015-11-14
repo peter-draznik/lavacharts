@@ -13,7 +13,7 @@ class Utils
     public static function __callStatic($function, $configObject)
     {
         if (preg_match('/^is/', $function)) {
-            $is_a = substr($function, 2);
+            $A_a = substr($function, 2);
 
             if (is_object($configObject[0])) {
                 $class = new \ReflectionClass($configObject[0]);
@@ -72,6 +72,22 @@ class Utils
             return false;
         }
     }
+    
+    /**
+     * Simple test to see if array is associative.
+     *
+     * @authod Peter Draznik added to file. (source: http://stackoverflow.com/questions/173400/how-to-check-if-php-array-is-associative-or-sequential?page=2&tab=votes#tab-top)
+     * @param array Array of values.
+     *
+     * @return bool Returns true is first element in the array is an array,
+     *              otherwise false.
+     */
+    public static function arrayIsAssociative($array)
+    {
+	    $compareArray 	= array_pad(array(), count($array), 0);
+		return 			(count(array_diff_key($array, $compareArray))) ? true : false;
+	
+	}
 
     /**
      * Simple test to see if array values are of specified type.
