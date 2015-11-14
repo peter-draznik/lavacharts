@@ -387,33 +387,15 @@ class DataTable
 
                 for ($index = 0; $index < count($this->cols); $index++) {
                     if (isset($optCellArray[$index])) {
-	                    if (!Utils::arrayIsMulti($optCellArray[$index])) {//Just enter the value
-		                    if ($this->cols[$index]['type'] == 'date') {
-	                            $rowVals[] = array('v' => $this->parseDate($optCellArray[$index]));
-	                        } else {
-	                            $rowVals[] = array('v' => $optCellArray[$index]);
-	                        }
-	                    }else{
-		                    /*
-		                    $row_display 		= $optCellArray[$index]['f'];
-	                        $row_additional 	= $optCellArray[$index]['a'];
-		                    $row_value 			= ($this->cols[$index]['type'] == 'date')?
-		                    						$this->parseDate($optCellArray[$index]['v']):
-		                    						$optCellArray[$index];
-		                    $rowVals[] = 	[
-	                        					'f' 		=> $row_display,	//displayed value
-	                        					'v'			=> $row_value,		//searched value
-	                        					'a'			=> $row_additional, //additional value needed to be associated with the row
-	                        					
-	                        				];
-	                        */
-	                    }
-                        
+	                    if ($this->cols[$index]['type'] == 'date') {
+                            $rowVals[] = array('v' => $this->parseDate($optCellArray[$index]));
+                        } else {
+                            $rowVals[] = array('v' => $optCellArray[$index]);
+                        }
                     } else {
                         $rowVals[] = array('v' => null);
                     }
                 }
-
                 $this->rows[] = array('c' => $rowVals);
             }
         }
@@ -645,6 +627,7 @@ class DataTable
 
     /**
      * Parses an extended cell definition, as and array defined with v,f,p
+     * Also added array defined with a 
      *
      * @access private
      * @param  array              $cellArray
@@ -653,14 +636,17 @@ class DataTable
      */
     private function parseExtendedCellArray($cellArray)
     {
-        foreach ($cellArray as $prop => $value) {
-            if (in_array($value, array('v', 'f', 'p', 'a')) === false) {
-                throw new InvalidRowProperty;
-            }
-
-            $rowVals[] = array($prop => $value);
+        foreach ($cellArray as $row_data){
+	        $row_array  = [];
+	        foreach ($row_data as $col_key=>$col_val){
+			    //$row_array[] = $col_key;
+			    $row_array[$col_key] = $col_val;
+	        }
+	        $rowVals[] = $row_array;
         }
-
+        
+        
+        
         return $rowVals;
     }
 
