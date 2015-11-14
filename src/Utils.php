@@ -2,6 +2,7 @@
 ///
 class Utils
 {
+    ///
     /**
      * Magic method as an alias to is_a($object, $type)
      *
