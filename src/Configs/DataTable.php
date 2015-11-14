@@ -361,7 +361,7 @@ class DataTable
      * @throws InvalidCellCount
      * @return DataTable
      */
-    public function addRow($optCellArray = null)
+    public function addRow($optCellArray = null, $extraCellArray = null)
     {
         if (is_null($optCellArray)) {
             $this->rows[] = $this->addNullColumn();
@@ -379,7 +379,7 @@ class DataTable
                     $rowVals = $this->parseExtendedCellArray($optCellArray);
                 }
 
-                $this->rows[] = array('c' => $rowVals);
+                $this->rows[] = array('c' => $rowVals, 'e'=>$extraCellArray);
             } else {
                 if (count($optCellArray) > count($this->cols)) {
                     throw new InvalidCellCount(count($optCellArray), count($this->cols));
@@ -396,7 +396,7 @@ class DataTable
                         $rowVals[] = array('v' => null);
                     }
                 }
-                $this->rows[] = array('c' => $rowVals);
+                $this->rows[] = array('c' => $rowVals, 'e'=>$extraCellArray);
             }
         }
 
