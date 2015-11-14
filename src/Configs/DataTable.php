@@ -17,9 +17,9 @@
  *
  * @package    Lavacharts
  * @subpackage Configs
- * @author     Kevin Hill <kevinkhill@gmail.com>
- * @copyright  (c) 2015, KHill Designs
- * @link       http://github.com/kevinkhill/lavacharts GitHub Repository Page
+ * @author     Peter Draznik <peter.draznik@38thStreetStudios.com>
+ * @copyright  (c) 2015, 38th Street Studios
+ * @link       https://github.com/peter-draznik/lavacharts GitHub Repository Page
  * @link       http://lavacharts.com                   Official Docs Site
  * @license    http://opensource.org/licenses/MIT MIT
  */
@@ -387,11 +387,26 @@ class DataTable
 
                 for ($index = 0; $index < count($this->cols); $index++) {
                     if (isset($optCellArray[$index])) {
-                        if ($this->cols[$index]['type'] == 'date') {
-                            $rowVals[] = array('v' => $this->parseDate($optCellArray[$index]));
-                        } else {
-                            $rowVals[] = array('v' => $optCellArray[$index]);
-                        }
+	                    if (!Utils::arrayIsMulti($optCellArray[$index])) {//Just enter the value
+		                    if ($this->cols[$index]['type'] == 'date') {
+	                            $rowVals[] = array('v' => $this->parseDate($optCellArray[$index]));
+	                        } else {
+	                            $rowVals[] = array('v' => $optCellArray[$index]);
+	                        }
+	                    }else{
+		                    $row_display 		= $optCellArray[$index]['f'];
+	                        $row_additional 	= $optCellArray[$index]['a'];
+		                    $row_value 			= ($this->cols[$index]['type'] == 'date')?
+		                    						$this->parseDate($optCellArray[$index]['v']):
+		                    						$optCellArray[$index];
+		                    $rowVals[] = 	[
+	                        					'f' 		=> $row_display,	//displayed value
+	                        					'v'			=> $row_value,		//searched value
+	                        					'a'			=> $row_additional, //additional value needed to be associated with the row
+	                        					
+	                        				];
+	                    }
+                        
                     } else {
                         $rowVals[] = array('v' => null);
                     }
