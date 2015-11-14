@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\App;
 $app   = App::getFacadeApplication();
 $blade = $app['view']->getEngineResolver()->resolve('blade')->getCompiler();
 
-$charts = array(
+$charts = [
     'AreaChart',
     'BarChart',
     'CalendarChart',
@@ -19,7 +19,9 @@ $charts = array(
     'LineChart',
     'PieChart',
     'GoogleTable'
-);
+
+
+];
 
 $dashboards = [
 	'Dashboard',	
