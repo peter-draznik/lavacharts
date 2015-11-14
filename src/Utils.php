@@ -76,7 +76,6 @@ class Utils
     /**
      * Simple test to see if array is associative.
      *
-     * @authod Peter Draznik added to file. (source: http://stackoverflow.com/questions/173400/how-to-check-if-php-array-is-associative-or-sequential?page=2&tab=votes#tab-top)
      * @param array Array of values.
      *
      * @return bool Returns true is first element in the array is an array,
