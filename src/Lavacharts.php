@@ -32,6 +32,22 @@ use \Khill\Lavacharts\Exceptions\InvalidDivDimensions;
  * @link      http://lavacharts.com                   Official Docs Site
  * @license   http://opensource.org/licenses/MIT MIT
  */
+<<<<<<< HEAD
+=======
+
+use Khill\Lavacharts\Utils;
+use Khill\Lavacharts\Volcano;
+use Khill\Lavacharts\JavascriptFactory;
+use Khill\Lavacharts\Exceptions\ChartNotFound;
+use Khill\Lavacharts\Exceptions\InvalidChartLabel;
+use Khill\Lavacharts\Exceptions\InvalidDashboardLabel;
+use Khill\Lavacharts\Exceptions\InvalidLavaObject;
+use Khill\Lavacharts\Exceptions\InvalidConfigValue;
+use Khill\Lavacharts\Exceptions\InvalidEventCallback;
+use Khill\Lavacharts\Exceptions\InvalidDivDimensions;
+use Khill\Lavacharts\Exceptions\InvalidConfigProperty;
+
+>>>>>>> 2.6
 class Lavacharts
 {
     /**
@@ -64,9 +80,37 @@ class Lavacharts
         'GaugeChart',
         'GeoChart',
         'LineChart',
+<<<<<<< HEAD
         'ScatterChart'
     ];
 
+=======
+        'GoogleTable',
+        
+    );
+    
+    /**
+     * Types of dashboards that can be created. (Only one kind really...)
+     *
+     * @var array
+     */
+	private $dashboardClasses = [
+		'Dashboard'
+	];
+	
+	/**
+     * Types of controls that can be created. (Only one kind really...)
+     *
+     * @var array
+     */
+	private $controlClasses = [
+		'CategoryFilter',
+		'ChartRangeFilter',
+		'DateRangeFilter',
+		'NumberRangeFilter',
+		'StringFilter'
+	];
+>>>>>>> 2.6
     /**
      * Holds all of the defined configuration class names.
      *
@@ -91,8 +135,15 @@ class Lavacharts
         'Stroke',
         'TextStyle',
         'Tooltip',
+<<<<<<< HEAD
         'VerticalAxis'
     ];
+=======
+        'VerticalAxis',
+        'CssClassNames',
+        'Ui'
+    );
+>>>>>>> 2.6
 
     /**
      * Types of column formatters.
@@ -118,6 +169,7 @@ class Lavacharts
         'MouseOut',
         'MouseOver',
         'Ready',
+<<<<<<< HEAD
         'Select'
     ];
 
@@ -133,6 +185,11 @@ class Lavacharts
         'NumberRangeFilter',
         'StringFilter'
     ];
+=======
+        'Select',
+        'Sort'
+    );
+>>>>>>> 2.6
 
     /**
      * Creates Volcano & Javascript Factory
@@ -152,7 +209,8 @@ class Lavacharts
         $this->volcano   = new Volcano;
         $this->jsFactory = new JavascriptFactory;
     }
-
+	
+	
     /**
      * Magic function to reduce repetitive coding and create aliases.
      *
@@ -168,12 +226,31 @@ class Lavacharts
      */
     public function __call($method, $arguments)
     {
+<<<<<<< HEAD
         //Rendering Aliases
         if ((bool) preg_match('/^render/', $method) === true) {
             $type = str_replace('render', '', $method);
 
             if ($type !== 'Dashboard' && in_array($type, $this->chartClasses, true) === false) {
                 throw new InvalidLavaObject($type);
+=======
+        
+        if ($this->strStartsWith($member, 'render')) {
+            $objectType = str_replace('renderChart', 	 '', $member);
+            $objectType = str_replace('renderDashboard', '', $objectType);
+            $objectType = str_replace('renderControl', 	 '', $objectType);
+
+            if (in_array($objectType, $this->chartClasses)) {
+	            return $this->renderChart($objectType, $arguments[0], $arguments[1]);
+            } elseif (in_array($objectType, $this->controlClasses)) {
+                return $this->renderControl($objectType, $arguments[0], $arguments[1]);
+            } elseif (in_array($objectType, $this->dashboardClasses)) {
+                return $this->renderDashboard($objectType, $arguments[0], $arguments[1]);
+            } elseif ( in_array(str_replace('Wrapper','', $objectType), $this->chartClasses) ){
+	            return $this->renderChartWrapper(str_replace('Wrapper','', $objectType), $arguments[0], $arguments[1]);
+            } else {
+                throw new InvalidLavaObject($objectType);
+>>>>>>> 2.6
             }
 
             return $this->render($type, $arguments[0], $arguments[1]);
@@ -184,9 +261,58 @@ class Lavacharts
             return $this->chartFactory($method, $arguments);
         }
 
+<<<<<<< HEAD
         //ConfigObjects
         if (in_array($method, $this->configClasses)) {
             return $this->configFactory($method, $arguments);
+=======
+        if (in_array($member, $this->chartClasses)) {
+            if (isset($arguments[0])) {
+                if (Utils::nonEmptyString($arguments[0])) {
+	                return $this->chartFactory($member, $arguments[0]);
+                } else {
+                    throw new InvalidChartLabel($arguments[0]);
+                }
+            } else {
+                throw new InvalidChartLabel;
+            }
+        }
+        
+        if (in_array( str_replace( 'Wrapper' , '', $member) , $this->chartClasses)) {
+            if (isset($arguments[0])) {
+                if (Utils::nonEmptyString($arguments[0])) {
+	                return $this->chartWrapperFactory($member, $arguments[0]);
+                } else {
+                    throw new InvalidChartLabel($arguments[0]);
+                }
+            } else {
+                throw new InvalidChartLabel;
+            }
+>>>>>>> 2.6
+        }
+        
+        if (in_array($member, $this->controlClasses)) {
+            if (isset($arguments[0])) {
+                if (Utils::nonEmptyString($arguments[0])) {
+                    return $this->controlFactory($member, $arguments[0]);
+                } else {
+                    throw new InvalidControlLabel($arguments[0]);
+                }
+            } else {
+                throw new InvalidControlLabel;
+            }
+        }
+        
+        if (in_array($member, $this->dashboardClasses)) {
+            if (isset($arguments[0])) {
+                if (Utils::nonEmptyString($arguments[0])) {
+                    return $this->dashboardFactory($member, $arguments[0]);
+                } else {
+                    throw new InvalidDashboardLabel($arguments[0]);
+                }
+            } else {
+                throw new InvalidDashboardLabel;
+            }
         }
 
         //Formatters
@@ -322,7 +448,11 @@ class Lavacharts
      * @param  mixed  $divDimensions Set true for div creation, or pass an array with height & width
      * @return string
      */
+<<<<<<< HEAD
     private function renderChart($type, Label $label, ElementId $elementId, $divDimensions=false)
+=======
+    public function renderChart($chartType, $chartLabel, $elementId, $divDimensions = false)
+>>>>>>> 2.6
     {
         $jsOutput = '';
 
@@ -341,6 +471,153 @@ class Lavacharts
 
         return $jsOutput;
     }
+    
+    /**
+     * Renders the chart wrapper into the page
+     *
+     * Given a chart label and an HTML element id, this will output
+     * all of the necessary javascript to generate the chart.
+     *
+     * @access public
+     * @since  v2.0.0
+     *
+     * @param string $chartType     Type of chart to render.
+     * @param string $chartLabel    Label of a saved chart.
+     * @param string $elementId     HTML element id to render the chart into.
+     * @param mixed  $divDimensions Set true for div creation, or pass an array with height & width
+     *
+     * @return string
+     */
+    public function renderChartWrapper($chartType, $chartLabel, $elementId, $divDimensions = false)
+    {
+        $jsOutput = '';
+
+        $chart = $this->volcano->getChart($chartType, $chartLabel);
+
+        if ($this->jsFactory->coreJsRendered() === false) {
+            $jsOutput = $this->jsFactory->getCoreJs();
+            $this->jsFactory->coreJsRendered(true);
+        }
+
+        if ($divDimensions !== false) {
+            $jsOutput .= $this->div($elementId, $divDimensions);
+        }
+
+        $jsOutput .= $this->jsFactory->getChartWrapperJs($chart, $elementId);
+
+        return $jsOutput;
+    }
+    
+    /**
+     * Renders the control into the page
+     *
+     * Given a control label and an HTML element id, this will output
+     * all of the necessary javascript to generate the chart.
+     *
+     * @access public
+     * @since  v2.0.0
+     *
+     * @param string $controlType     Type of control to render.
+     * @param string $controlType    Label of a saved chart.
+     * @param string $elementId     HTML element id to render the chart into.
+     * @param mixed  $divDimensions Set true for div creation, or pass an array with height & width
+     *
+     * @return string
+     */
+    public function renderControl($controlType, $controlLabel, $elementId = null, $divDimensions = false)
+    {
+        $jsOutput = '';
+
+        $control = $this->volcano->getControl($controlType, $controlLabel);
+		if( !empty($elementId) && Utils::nonEmptyString($elementId) ){
+			$control->setElementId($elementId);
+		}
+        if ($this->jsFactory->coreJsRendered() === false) {
+            $jsOutput = $this->jsFactory->getCoreJs();
+            $this->jsFactory->coreJsRendered(true);
+        }
+
+        if ($divDimensions !== false) {
+            $jsOutput .= $this->div($control->elementId, $divDimensions);
+        }
+
+        $jsOutput .= $this->jsFactory->getControlWrapperJs($control, $elementId);
+
+        return $jsOutput;
+    }
+
+	/**
+     * Renders the control into the page
+     *
+     * Given a control label and an HTML element id, this will output
+     * all of the necessary javascript to generate the chart.
+     *
+     * @access public
+     * @since  v2.0.0
+     *
+     * @param string $controlType     Type of control to render.
+     * @param string $controlType    Label of a saved chart.
+     * @param string $elementId     HTML element id to render the chart into.
+     * @param mixed  $divDimensions Set true for div creation, or pass an array with height & width
+     *
+     * @return string
+     */
+    public function saveControl($controlType, $controlLabel, $elementId = null, $divDimensions = false)
+    {
+        $jsOutput = '';
+
+        $control = $this->volcano->getControl($controlType, $controlLabel);
+		if( !empty($elementId) && Utils::nonEmptyString($elementId) ){
+			$control->setElementId($elementId);
+		}
+        if ($this->jsFactory->coreJsRendered() === false) {
+            $jsOutput = $this->jsFactory->getCoreJs();
+            $this->jsFactory->coreJsRendered(true);
+        }
+
+        return $control;
+    }
+
+	    
+    /**
+     * Renders the dashboard into the page
+     *
+     * Given a dashboard label and an HTML element id, this will output
+     * all of the necessary javascript to generate the chart.
+     *
+     * @access public
+     * @since  v2.0.0
+     *
+     * @param string $dashboardType     Type of dashboard to render.
+     * @param string $dashboardLabel    Label of a saved chart.
+     * @param string $elementId     	HTML element id to render the chart into.
+     * @param mixed  $divDimensions 	Set true for div creation, or pass an array with height & width
+     *
+     * @return string
+     */
+    public function renderDashboard($dashboardType, $dashboardLabel, $elementId = null, $divDimensions = false)
+    {
+        $jsOutput = '';
+
+        $dashboard = $this->volcano->getDashboard($dashboardType, $dashboardLabel);
+		if( !empty($elementId) && Utils::nonEmptyString($elementId) ){
+			$dashboard->setElementId($elementId);
+		}
+        if ($this->jsFactory->coreJsRendered() === false) {
+            $jsOutput = $this->jsFactory->getCoreJs();
+            $this->jsFactory->coreJsRendered(true);
+        }
+
+        if ($divDimensions !== false) {
+            $jsOutput .= $this->div($dashboard->elementId, $divDimensions);
+        }
+
+        $jsOutput .= $this->jsFactory->getDashboardJs($dashboard, $elementId);
+
+        return $jsOutput;
+    }
+    
+    
 
     /**
      * Renders the chart into the page
@@ -396,6 +673,7 @@ class Lavacharts
      */
     public function exists($type, $label)
     {
+<<<<<<< HEAD
         $label = new Label($label);
 
         if ($type == 'Dashboard') {
@@ -444,7 +722,11 @@ class Lavacharts
         }
 
         return false;
+=======
+        return $this->volcano->checkChart($type, $label) || $this->volcano->checkControl($type, $label) || $this->volcano->checkDashboard($type, $label);
+>>>>>>> 2.6
     }
+    
 
     /**
      * Builds a div html element for the chart to be rendered into.
@@ -555,6 +837,7 @@ class Lavacharts
             );
         }
 
+<<<<<<< HEAD
         if ($args[1] instanceof DataTable === false) {
             throw new InvalidDataTable($args[1]);
         }
@@ -570,6 +853,96 @@ class Lavacharts
         $this->volcano->storeChart($chart);
 
         return $chart;
+=======
+            $this->volcano->storeChart($chart);
+        }	
+        
+        return $this->volcano->getChart($type, $label);
+    }
+    
+    /**
+     * Creates and stores Chart Wrappers
+     *
+     * If the Chart is found in the Volcano, then it is returned.
+     * Otherwise, a new chart is created and stored in the Volcano.
+     *
+     * @access private
+     * @since  v2.0.0
+     *
+     * @uses  Chart
+     * @param string $type  Type of chart to fetch or create.
+     * @param string $label Label of the chart.
+     *
+     * @return Chart
+     */
+    private function chartWrapperFactory($type, $label)
+    {
+        $chartObject = __NAMESPACE__ . '\\Charts\\' . $type;
+
+        if (! $this->volcano->checkChart($type, $label)) {
+            $chart = new $chartObject($label);
+
+            $this->volcano->storeChart($chart);
+        }	
+        
+        return $this->volcano->getChart($type, $label);
+>>>>>>> 2.6
+    }
+    
+    /**
+     * Creates and stores Controls
+     *
+     * If the Control is found in the Volcano, then it is returned.
+     * Otherwise, a new control is created and stored in the Volcano.
+     *
+     * @access private
+     * @since  v2.5.0
+     *
+     * @uses  Control
+     * @param string $type  Type of control to fetch or create.
+     * @param string $label Label of the chart.
+     *
+     * @return Control
+     */
+    private function controlFactory($type, $label)
+    {
+        $controlObject = __NAMESPACE__ . '\\Controls\\' . $type;
+		
+        if (! $this->volcano->checkControl($type, $label)) {
+            
+            $control = new $controlObject($label);
+            $this->volcano->storeControl($control);
+        }
+
+        return $this->volcano->getControl($type, $label);
+    }
+    
+    /**
+     * Creates and stores Dashboards
+     *
+     * If the Dashboard is found in the Volcano, then it is returned.
+     * Otherwise, a new chart is created and stored in the Volcano.
+     *
+     * @access private
+     * @since  v2.0.0
+     *
+     * @uses  Dashboard
+     * @param string $type  Type of chart to fetch or create.
+     * @param string $label Label of the chart.
+     *
+     * @return Chart
+     */
+    private function dashboardFactory($type, $label)
+    {
+        $chartObject = __NAMESPACE__ . '\\Controls\\' . $type;
+
+        if (! $this->volcano->checkDashboard($type, $label)) {
+            $chart = new $chartObject($label);
+
+            $this->volcano->storeDashboard($chart);
+        }
+
+        return $this->volcano->getDashboard($type, $label);
     }
 
     /**

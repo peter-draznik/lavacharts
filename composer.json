@@ -1,5 +1,5 @@
 {
-    "name": "khill/lavacharts",
+    "name": "peter-draznik/lavacharts",
     "description": "PHP wrapper library for the Google Chart API",
     "keywords": [
         "charts",
@@ -12,6 +12,11 @@
         {
             "name": "Kevin Hill",
             "email": "kevinkhill@gmail.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Peter Draznik",
+            "email": "Peter.Draznik@38thStreetStudios.com",
             "role": "Developer"
         }
     ],

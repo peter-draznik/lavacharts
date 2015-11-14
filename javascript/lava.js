@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * lava.js
  *
@@ -6,6 +7,57 @@
  * License: MIT
  */
 var lava = lava || {};
+=======
+window.lava = (function() {
+  this.get              = null;
+  this.event            = null;
+  this.loadData         = null;
+  this.register         = null;
+  this.getLavachart     = null;
+  this.charts           = {};
+  this.controls         = {};
+  this.dashboards       = {};
+  this.registeredCharts = [];
+  this.registeredControls = [];
+  this.registeredDashboards = [];
+
+  this.Chart = function() {
+    this.init    		= null;
+    this.redraw  		= null;
+    this.setData 		= null;
+    this.data    		= null;
+    this.chart   		= null;
+    this.options 		= null;
+    this.formats 		= [];
+  };
+  
+  this.Control 		= function() {
+    this.init    		= null;
+    this.redraw  		= null;
+    this.setData 		= null;
+    this.data    		= null;
+    this.control 		= null;
+    this.options 		= null;
+    this.formats 		= [];
+    //this.charts  		= [];
+  };
+  
+  this.Dashboard 		= function() {
+    this.init    		= null;
+    this.redraw  		= null;
+    this.setData 		= null;
+    this.data    		= null;
+    this.dashboard  	= null;
+    this.options 		= null;
+    this.formats 		= [];
+    //this.controls 		= [];
+  };
+
+  this.get = function (chartLabel, callback) {
+    if (arguments.length < 2 || typeof chartLabel !== 'string' || typeof callback !== 'function') {
+      throw new Error('[Lavacharts] The syntax for lava.get must be (str ChartLabel, fn Callback)');
+    }
+>>>>>>> 2.6
 
 (function() {
   "use strict";
@@ -32,7 +84,28 @@ var lava = lava || {};
     this.options = null;
     this.formats = [];
   };
+  
+    this.getControl = function (controlLabel, callback) {
+    if (arguments.length < 2 || typeof controlLabel !== 'string' || typeof callback !== 'function') {
+      throw new Error('[Lavacharts] The syntax for lava.getControl must be (str ControlLabel, fn Callback)');
+    }
 
+    lava.getLavacontrol(controlLabel, function (lavachart) {
+      return callback(lavachart.control);
+    });
+  };
+  
+    this.getDashboard = function (dashboardLabel, callback) {
+    if (arguments.length < 2 || typeof dashboardLabel !== 'string' || typeof callback !== 'function') {
+      throw new Error('[Lavacharts] The syntax for lava.getDashboard must be (str DashboardLabel, fn Callback)');
+    }
+
+    lava.getLavadashboard(dashboardLabel, function (lavachart) {
+      return callback(lavachart.dashboard);
+    });
+  };
+
+<<<<<<< HEAD
   /**
    * Dashboard object.
    *
@@ -44,6 +117,33 @@ var lava = lava || {};
     this.bindings  = [];
     this.dashboard = null;
     this.callbacks = [];
+=======
+  this.loadData = function (chartLabel, dataTableJson, callback) {
+    lava.getLavachart(chartLabel, function (lavachart) {
+      lavachart.setData(dataTableJson);
+      lavachart.redraw();
+
+      if (typeof callback == "function") {
+        return callback(lavachart.chart);
+      } else {
+        return true;
+      }
+    });
+  };
+  
+  
+  this.loadDashboardData = function (dashboardLabel, dataTableJson, callback) {
+    lava.getLavadashboard(dashboardLabel, function (lavadashboard) {
+      lavadashboard.setData(dataTableJson);
+      lavadashboard.redraw();
+
+      if (typeof callback == "function") {
+        return callback(lavadashboard.dashboard);
+      } else {
+        return true;
+      }
+    });
+>>>>>>> 2.6
   };
 
   this.Callback = function (label, func) {
@@ -86,6 +186,15 @@ var lava = lava || {};
   this.registerChart = function(type, label) {
     this.registeredCharts.push(type + ':' + label);
   };
+  
+  this.registerControl = function(type, label) {
+    this.registeredControls.push(type + ':' + label);
+  };
+  
+  this.registerDashboard = function(type, label) {
+    this.registeredDashboards.push(type + ':' + label);
+  };
+  
 
   /**
    * Loads a new DataTable into the chart and redraws.
@@ -174,6 +283,48 @@ var lava = lava || {};
 
     callback(LavaChart.chart, LavaChart);
   };
+  
+  this.getLavacontrol = function (controlLabel, callback) {
+    var controlTypes = Object.keys(lava.controls);
+    var control;
+
+    var search = controlTypes.some(function (e) {
+      if (typeof lava.controls[e][controlLabel] !== 'undefined') {
+        control = lava.controls[e][controlLabel];
+
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    if (search === false) {
+      throw new Error('[Lavacharts] Control "' + controlLabel + '" was not found');
+    } else {
+      callback(control);
+    }
+  };
+  
+  this.getLavadashboard = function (dashboardLabel, callback) {
+    var dashboardTypes = Object.keys(lava.dashboards);
+    var dashboard;
+
+    var search = dashboardTypes.some(function (e) {
+      if (typeof lava.dashboards[e][dashboardLabel] !== 'undefined') {
+        dashboard = lava.dashboards[e][dashboardLabel];
+
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    if (search === false) {
+      throw new Error('[Lavacharts] Dashboard "' + dashboardLabel + '" was not found');
+    } else {
+      callback(dashboard);
+    }
+  };
 
   /**
    * Redraws all of the registed charts on screen.
@@ -192,6 +343,41 @@ var lava = lava || {};
         var parts = lava.registeredCharts[c].split(':');
 
         lava.charts[parts[0]][parts[1]].redraw();
+      }
+    }, delay);
+  };
+  
+  this.redrawControls = function() {
+    var timer, delay = 300;
+
+    clearTimeout(timer);
+
+    timer = setTimeout(function() {
+      for(var c = 0; c < lava.registeredControls.length; c++) {
+        var parts = lava.registeredControls[c].split(':');
+		/*
+        lava.controls[parts[0]][parts[1]].ontrol.draw(//Probably need to update this
+          lava.controls[parts[0]][parts[1]].data,
+          lava.controls[parts[0]][parts[1]].options
+        );
+        */
+      }
+    }, delay);
+  };
+  
+  this.redrawDashboards = function() {
+    var timer, delay = 300;
+
+    clearTimeout(timer);
+
+    timer = setTimeout(function() {
+      for(var c = 0; c < lava.registeredDashboards.length; c++) {
+        var parts = lava.registeredDashboards[c].split(':');
+
+        lava.dashboards[parts[0]][parts[1]].dashboard.draw(	//Probably need to update this
+          lava.dashboards[parts[0]][parts[1]].data,
+          lava.dashboards[parts[0]][parts[1]].options
+        );
       }
     }, delay);
   };

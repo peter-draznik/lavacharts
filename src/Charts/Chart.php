@@ -34,6 +34,7 @@ use \Khill\Lavacharts\Exceptions\InvalidConfigValue;
  */
 class Chart
 {
+<<<<<<< HEAD
     /**
      * The chart's unique label.
      *
@@ -85,6 +86,18 @@ class Chart
         'width'
     ];
 
+=======
+    public $type          = null;
+    public $label         = null;
+    public $datatable     = null;
+    public $deferedRender = false;
+    
+
+    protected $defaults  = null;
+    protected $events    = array();
+    protected $options   = array();
+    protected $elementId  = null;
+>>>>>>> 2.6
 
     /**
      * Builds a new chart with the given label.
@@ -208,7 +221,34 @@ class Chart
     {
         return json_encode($this->options);
     }
-
+	
+	public function setElementId($elementId)
+	{
+		if (Utils::nonEmptyString($elementId) === false) {
+            throw new InvalidElementId($elementId);
+        }
+		
+		$this->elementId = $elementId;
+	}
+	
+	public function getElementId()
+	{
+		return $this->elementId;
+	}
+	public function getType(){
+		return str_replace('Google', '', $this->type);
+	}
+	public function getChartWrapperJson()
+	{
+		$wrapper = [
+			'chartType'	=> $this->getType(),
+			//'dataTable'	=> json_decode($this->getDataTableJson()) ,
+			'options'	=> $this->options,
+			'containerId'	=> $this->elementId
+			
+		];
+		return json_encode($wrapper);
+	}
     /**
      * Checks if any events have been assigned to the chart.
      *
@@ -342,6 +382,27 @@ class Chart
                 'with valid HTML colors'
             );
         }
+<<<<<<< HEAD
+=======
+    }
+    
+    /**
+     * Assigns wich Datatable will be used for this Chart.
+     *
+     * If a label is provided then the defined Datatable will be used.
+     * If called with no argument, or the chart is attempted to be generated
+     * without calling this function, the chart will search for a Datatable with
+     * the same label as the Chart.
+     *
+     * @uses  Datatable
+     * @param Datatable
+     *
+     * @return Chart
+     */
+    public function datatable(Datatable $d)
+    {
+        $this->datatable = $d;
+>>>>>>> 2.6
 
         return $this->addOption([__FUNCTION__ => $cArr]);
     }
@@ -360,6 +421,19 @@ class Chart
      */
     public function events($e)
     {
+<<<<<<< HEAD
+=======
+        $values = array(
+            'animationfinish',
+            'error',
+            'onmouseover',
+            'onmouseout',
+            'ready',
+            'select',
+            'sort'
+        );
+
+>>>>>>> 2.6
         if (is_array($e)) {
             foreach ($e as $event) {
                 if (is_subclass_of($event, 'Khill\Lavacharts\Events\Event')) {
