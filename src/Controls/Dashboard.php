@@ -132,7 +132,7 @@ class Dashboard
     {
         if (Utils::arrayIsMulti($bindings)) {
             foreach ($bindings as $control => $charts) { //or $chart=>controls
-                if (Utils::arrayIsMulti($charts)) {
+                if ( Utils::arrayIsMulti($charts) ) {
 		            foreach ($charts as $chartKey => $chart) {
 		                $chartLabel = is_int($chartKey)?$chart:$chartKey;
 		                
@@ -143,7 +143,7 @@ class Dashboard
 		                }
 		                
 		            }
-		        } else if(is_string($charts) && strlen($charts) > 0 ){
+		        } else if( Utils::nonEmptyString($charts) ){
 			        if( $this->checkBindingOrdering($control) ){
 		                $this->makeBinding($control, $charts);
 	                }else{
