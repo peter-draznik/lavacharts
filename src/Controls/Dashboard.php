@@ -132,7 +132,7 @@ class Dashboard
     {
         if (Utils::arrayIsMulti($bindings)) {
             foreach ($bindings as $control => $charts) { //or $chart=>controls
-                if ( Utils::arrayIsMulti($charts) ) {
+                if ( is_array($charts) && count($charts)>0 ) {
 		            foreach ($charts as $chartKey => $chart) {
 		                $chartLabel = is_int($chartKey)?$chart:$chartKey;
 		                
@@ -143,7 +143,7 @@ class Dashboard
 		                }
 		                
 		            }
-		        } else if( Utils::nonEmptyString($charts) ){
+		        } else if( is_string($charts) && count($charts)>0 ){
 			        if( $this->checkBindingOrdering($control) ){
 		                $this->makeBinding($control, $charts);
 	                }else{
@@ -173,6 +173,7 @@ class Dashboard
     private function checkBindingOrdering($firstLabel, $isControlFirst=true){
 	    //$ordering=0 => [fliter=>table(s)]
 	    //$ordering=1 => [chart=>filter(s)]
+	    
 	    $firstLabel 	= explode('|', $firstLabel)[0];
 	    $isChart  		= Utils::nonEmptyStringInArray($firstLabel, Lavacharts::$chartClasses);
 	    $isControl 		= Utils::nonEmptyStringInArray($firstLabel, Lavacharts::$controlClasses);
