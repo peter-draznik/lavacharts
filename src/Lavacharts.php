@@ -46,7 +46,7 @@ class Lavacharts
      *
      * @var array
      */
-    private $chartClasses = array(
+    public static $chartClasses = array(
         'AreaChart',
         'BarChart',
         'CalendarChart',
@@ -75,7 +75,7 @@ class Lavacharts
      *
      * @var array
      */
-	private $controlClasses = [
+	public static $controlClasses = [
 		'CategoryFilter',
 		'ChartRangeFilter',
 		'DateRangeFilter',
