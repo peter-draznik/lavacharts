@@ -1,5 +1,5 @@
 <?php namespace Khill\Lavacharts;
-
+ 
 class Utils
 {
     /**
