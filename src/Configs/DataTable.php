@@ -394,6 +394,7 @@ class DataTable
 	                            $rowVals[] = array('v' => $optCellArray[$index]);
 	                        }
 	                    }else{
+		                    /*
 		                    $row_display 		= $optCellArray[$index]['f'];
 	                        $row_additional 	= $optCellArray[$index]['a'];
 		                    $row_value 			= ($this->cols[$index]['type'] == 'date')?
@@ -405,6 +406,7 @@ class DataTable
 	                        					'a'			=> $row_additional, //additional value needed to be associated with the row
 	                        					
 	                        				];
+	                        */
 	                    }
                         
                     } else {
@@ -652,7 +654,7 @@ class DataTable
     private function parseExtendedCellArray($cellArray)
     {
         foreach ($cellArray as $prop => $value) {
-            if (in_array($value, array('v', 'f', 'p')) === false) {
+            if (in_array($value, array('v', 'f', 'p', 'a')) === false) {
                 throw new InvalidRowProperty;
             }
 
