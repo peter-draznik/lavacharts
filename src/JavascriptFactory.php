@@ -565,11 +565,7 @@ class JavascriptFactory
     private function buildBindingsJs()
     {
         $bindings 		= $this->dashboard->getBindings();
-        $out  			= sprintf(
-        					'$this.dashboard.Dashboard[%s].bindings = %s'
-        					$this->dashboard->label ,
-        					print_r($bindings)
-		        		).PHP_EOL.PHP_EOL;
+        $out  			= 'lava.dashboards.Dashboard.'.($this->dashboard->label).'.bindings = JSON.parse(\''.json_encode($bindings).'\');';
         
         $out 			.= '$this.dashboard';
         
@@ -582,15 +578,18 @@ class JavascriptFactory
 		        $controlLabel	= $controls[1];
 		        
 		        //$controlJSB = ; 
-		        $controls_dashboard .=  sprintf( 'lava.controls.%s["%s"].dashboardName.push(%s);', 
-		        						$controlType,  
-		        						$controlLabel, 
-		        						$this->dashboard->label 
-		        					).PHP_EOL.PHP_EOL;
+		        $controls_dashboard .= 	sprintf( 'lava.controls.%s["%s"].dashboardName = "%s";', 
+		        							$controlType,  
+											$controlLabel, 
+											$this->dashboard->label 
+										).PHP_EOL.PHP_EOL;
 		        					
 		        
 		        					
-		        $controlJSB 		= sprintf( 'lava.controls.%s["%s"].control', $controlType,  $controlLabel ).PHP_EOL.PHP_EOL; 
+		        $controlJSB 		= 	sprintf( 'lava.controls.%s["%s"].control', 
+		        							$controlType,  
+		        							$controlLabel 
+										).PHP_EOL.PHP_EOL; 
 		        
 		        if (is_array($charts) && count($charts) > 0) {
 		            $out .= sprintf(
@@ -599,17 +598,21 @@ class JavascriptFactory
 		            
 		            foreach ($charts as $chartKey => $chart) {
 		               
-		                $chart		= is_int($chartKey)?($chart):$chartKey;
-		                if( is_array($chart) ){ $chart = $chart[0];}
+		                $chart		= is_int($chartKey)	?$chart		:$chartKey;
+		                $chart 		= is_array($chart)	?$chart[0]	:$chart;
+		                //if( is_array($chart) ){ $chart = $chart[0];}
 		                
 		                $chart 		= explode('|', $chart);
 		                 
 				        $chartType 	= $chart[0];
 						$chartLabel	= $chart[1];
 						
-				        $chartJSB = sprintf( 'lava.charts.%s["%s"].chart',  $chartType, $chartLabel ).PHP_EOL.PHP_EOL;
+				        $chartJSB 	=	sprintf( 'lava.charts.%s["%s"].chart',  
+				        					$chartType, 
+				        					$chartLabel 
+										).PHP_EOL.PHP_EOL;
 				        
-				        $charts_dashboard 	.= 	sprintf( 'lava.charts.%s["%s"].dashboardName.push(%s);', 
+				        $charts_dashboard 	.= 	sprintf( 'lava.charts.%s["%s"].dashboardName = "%s";', 
 					        						$chartType,  
 					        						$chartLabel, 
 					        						$this->dashboard->label 
@@ -626,11 +629,11 @@ class JavascriptFactory
 					
 			        $chartJSB = sprintf( 'lava.charts.%s["%s"].chart',  $chartType, $chartLabel ).PHP_EOL.PHP_EOL;
 			        
-			        $charts_dashboard 	.= 	sprintf( 'lava.charts.%s["%s"].dashboardName.push(%s);', 
-					        						$chartType,  
-					        						$chartLabel, 
-					        						$this->dashboard->label 
-					        					).PHP_EOL.PHP_EOL;
+			        $charts_dashboard 	.= 	sprintf( 'lava.charts.%s["%s"].dashboardName = "%s";', 
+					        					$chartType,  
+					        					$chartLabel, 
+					        					$this->dashboard->label 
+					        				).PHP_EOL.PHP_EOL;
 			        
 			        $out .= sprintf( '.bind( %s , %s )', $controlJSB, $chartJSB ).PHP_EOL.PHP_EOL;
 		        } else {
