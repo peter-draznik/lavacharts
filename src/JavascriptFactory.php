@@ -530,6 +530,8 @@ class JavascriptFactory
             $this->control->getControlWrapperJson()
         ).PHP_EOL.PHP_EOL;
         
+        
+        
 		$out .= "};".PHP_EOL.PHP_EOL;
 		
         $out .= sprintf(
@@ -569,6 +571,9 @@ class JavascriptFactory
 		        $controls	 	= explode('|', $controls);
 		        $controlType 	= $controls[0];
 		        $controlLabel	= $controls[1];
+		        
+		        $controlJSB = sprintf( 'lava.controls.%s["%s"].dashboardName.push(%s)', $controlType,  $controlLabel, $this->dashboard->label ).PHP_EOL.PHP_EOL; 
+		        
 		        
 		        $controlJSB = sprintf( 'lava.controls.%s["%s"].control', $controlType,  $controlLabel ).PHP_EOL.PHP_EOL; 
 		        
