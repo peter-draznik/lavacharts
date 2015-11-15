@@ -174,7 +174,7 @@ class Lavacharts
             $objectType = str_replace('renderDashboard', '', $objectType);
             $objectType = str_replace('renderControl', 	 '', $objectType);
 
-	            if (in_array($objectType, self::$chartClasses)) {
+	        if (in_array($objectType, self::$chartClasses)) {
 	            return $this->renderChart($objectType, $arguments[0], $arguments[1]);
             } elseif (in_array($objectType, self::$controlClasses)) {
                 return $this->renderControl($objectType, $arguments[0], $arguments[1]);
