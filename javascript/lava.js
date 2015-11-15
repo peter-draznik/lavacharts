@@ -29,7 +29,7 @@ window.lava = (function() {
     this.control 		= null;
     this.options 		= null;
     this.formats 		= [];
-    this.dashboardNames = [];
+    this.dashboardLabels = [];
   };
   
   this.Dashboard 		= function() {
@@ -40,7 +40,7 @@ window.lava = (function() {
     this.dashboard  	= null;
     this.options 		= null;
     this.formats 		= [];
-    this.controlNames 	= [];
+    this.controlLabels 	= [];
   };
 
   this.get = function (chartLabel, callback) {
